@@ -1,0 +1,275 @@
+/* RESET & DASAR */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #F7F7F0; /* Off-White/Abu-abu Sangat Muda */
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #8FBC8F; /* Hijau Olive Cerah */
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* CONTAINER */
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* HEADER */
+.doc-header {
+    background: #556B2F; /* Hijau Olive Gelap */
+    color: #fff;
+    padding: 1.5rem 0;
+    border-bottom: 3px solid #8FBC8F; /* Hijau Olive Cerah */
+    margin-bottom: 20px;
+}
+
+.doc-header h1 {
+    font-size: 1.8rem;
+}
+
+/* WRAPPER KONTEN UTAMA (menggunakan Flexbox) */
+.doc-content-wrapper {
+    display: flex;
+    gap: 30px;
+    padding: 0 0 40px 0;
+}
+
+/* SIDEBAR (Daftar Isi) */
+.doc-sidebar {
+    flex: 0 0 280px; 
+    position: sticky; 
+    top: 20px;
+    height: fit-content;
+    padding: 20px;
+    background: #FFFFFF; /* Putih */
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
+}
+
+.doc-sidebar .toc h2 {
+    font-size: 1.2rem;
+    color: #556B2F; /* Hijau Olive Gelap */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+
+.doc-sidebar .toc ul {
+    list-style: none;
+}
+
+.doc-sidebar .toc li a {
+    display: block;
+    padding: 5px 0;
+    color: #495057;
+    transition: color 0.2s;
+}
+
+.doc-sidebar .toc li a:hover {
+    color: #6B8E23; /* Hijau Olive Sedang */
+    text-decoration: none;
+    padding-left: 5px;
+}
+
+/* KONTEN UTAMA DOKUMENTASI */
+.doc-main-content {
+    flex-grow: 1; 
+}
+
+.doc-section {
+    background: #FFFFFF; /* Putih */
+    padding: 30px;
+    margin-bottom: 25px;
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
+}
+
+.doc-section h2 {
+    font-size: 1.6rem;
+    color: #556B2F; /* Hijau Olive Gelap */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.doc-section p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.doc-section ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    list-style: disc;
+}
+
+/* BLOCK KODE (Meniru tampilan terminal) */
+.code-block {
+    background-color: #36454F; /* Abu-abu Kebiruan Gelap (Slate) untuk kontras yang baik */
+    color: #D3D3D3; /* Abu-abu Sangat Cerah */
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto; 
+}
+
+.code-block code {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* STYLING UNTUK GAMBAR / SCREENSHOT */
+.image-container {
+    text-align: center; 
+    margin: 30px 0;
+    padding: 10px;
+    border: 1px solid #DCDCDC;
+    background-color: #F7F7F0; /* Off-White */
+    border-radius: 5px;
+}
+
+.image-container img {
+    max-width: 100%; 
+    height: auto; 
+    border: 1px solid #A9A9A9; /* Abu-abu Gelap */
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(85, 107, 47, 0.2); /* Shadow dengan sedikit sentuhan warna Olive */
+}
+
+.image-caption {
+    font-size: 0.85rem;
+    color: #696969; 
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* FOOTER */
+.doc-footer {
+    background: #556B2F; /* Hijau Olive Gelap */
+    color: #E0EEE0; /* Hijau sangat terang */
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+}
+
+/* RESPONSIVITAS */
+@media (max-width: 992px) {
+    .doc-content-wrapper {
+        flex-direction: column; 
+    }
+
+    .doc-sidebar {
+        position: static; 
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .doc-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .doc-section {
+        padding: 20px;
+    }
+
+    .image-container {
+        margin: 20px 0;
+    }
+}
+
+/* Dalam file docstyle.css */
+.doc-main-content .image-container {
+    margin: 20px 0; /* Tambahkan ruang vertikal */
+}
+
+.doc-main-content .image-container img {
+    /* Pastikan gambar tidak melebihi lebar containernya */
+    max-width: 100%; 
+    height: auto; /* Memastikan gambar menyesuaikan tinggi secara proporsional */
+    display: block;
+    border: 1px solid #ccc; /* Border sederhana agar terlihat lebih rapi */
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5px;
+    color: #666;
+}
+
+.step-block ol {
+    padding-left: 20px;
+    margin-left: 10px;
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.site-header h1 a{
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 24px;
+}
+
+.nav-kanan ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-kanan ul li a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.nav-kanan ul li a:hover {
+    text-decoration: underline;
+}
+
+.site-header {
+    background-color: #556B2F; /* Hijau Olive Gelap */
+    color: #fff;
+    padding: 1.5rem 0;
+    border-bottom: 3px solid #8FBC8F; /* Hijau Olive Cerah */
+    margin-bottom: 20px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.footer-logo img {
+  height: 40px; /* Sesuaikan ukuran logo */
+    width: auto;
+  border-radius: 4px; /* Opsional: sudut membulat */
+}

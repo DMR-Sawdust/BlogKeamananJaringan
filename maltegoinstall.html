@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial: Instalasi Maltego Pada Windows</title>
+    <link rel="stylesheet" href="docstyle.css"> </head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="#">Keamanan Jaringan</a></h1>
+            <nav class="nav-kanan">
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="index.html">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container doc-content-wrapper">
+        
+        <aside class="doc-sidebar">
+            <nav class="toc">
+                <h2>Daftar Isi</h2>
+                <ul>
+                    <li><a href="#pendahuluan">1. Pendahuluan</a></li>
+                    <li><a href="#langkah1">2. Langkah 1: Mengunduh Maltego</a></li>
+                    <li><a href="#langkah2">3. Langkah 2: Instalasi Java</a></li>
+                    <li><a href="#langkah3">4. Langkah 3: Instalasi Maltego</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="doc-main-content">
+
+            <section id="pendahuluan" class="doc-section">
+                <h2>1. Pendahuluan</h2>
+                <p>Dokumentasi ini akan memandu Anda melalui proses instalasi dan konfigurasi Maltego di sistem operasi Windows.</p>
+                <p>Maltego adalah sebuah platform investigasi berbasis open-source intelligence (OSINT) yang dikembangkan oleh Paterva. Tools ini banyak digunakan oleh praktisi keamanan siber, peneliti digital, hingga penyidik forensik karena kemampuannya dalam mengumpulkan, memetakan, dan menganalisis informasi dari berbagai sumber publik di internet.</p>
+            </section>
+
+            <section id="langkah1" class="doc-section">
+                <h2>2. Langkah 1: Download Maltego</h2>
+                <p>Sebelum memulai, Anda perlu mengunduh Maltego melalui tautan berikut:</p>
+                <a href="https://www.maltego.com/downloads/">Unduh di Sini</a>
+                <div class="step-block">
+                    <ol>
+                        <li>Operating System Windows</li>
+                        <li>Extension .exe + Java (x64)</li>
+                        <li>Extension .exe(jika sudah menginstal Java)</li>
+                        <li>tekan unduh</li>
+                    </ol>
+                </div>
+                <div class="image-container">
+                    <img src="Foto/downloadmaltego.png" alt="unduh_maltego">
+                    <p class="image-caption">Gambar 2.1: Menu mengunduh maltego pada website resmi</p>
+                </div>
+                <p>Tunggu hingga proses selesai.</p>
+            </section>
+
+            <section id="langkah2" class="doc-section"><!-- Instalasi Java -->
+                <h2>3. Langkah 2: Instalasi Java</h2>
+                <p>Menginstal Java, jika pada device belum terinstal java<code>apt</code>:</p>
+                <div class="step-block">
+                    <ol>
+                        <li>Mencari file instalasi Maltego yang sudah di unduh sebelumnya</li>
+                        <li>klik dua kali file tersebut</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101636.png" alt="Screenshot Instalasi java 1">
+                            <p class="image-caption">Gambar 2.1: Tampilan saat membuka file instalasi.</p>
+                        </div>
+                        <li>Klik "<strong>OK</strong>". </li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101717.png" alt="Screenshot Instalasi java 2">
+                            <p class="image-caption">Gambar 2.2: Tampilan pembuka saat instalasi java.</p>
+                        </div>
+                        <li>Klik "<strong>next</strong>". </li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101747.png" alt="Screenshot Instalasi java 3">
+                            <p class="image-caption">Gambar 2.3: Tampilan custom setup.</p>
+                        </div>
+                        <li>Atur lokasi aplikasi(opsioanl). Tekan "<strong>Nest</strong>" jika tidak ada yang ingin diubah.</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101804.png" alt="Screenshot Instalasi java 4">
+                            <p class="image-caption">Gambar 2.4: Tampilan instalasi akhir java.</p>
+                        </div>
+                        <li>Jika tampilan sebagai berikut, instalasi yang Anda lakukan sudah berhasil. Klik "<strong>Finish</strong>"</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101827.png" alt="Screenshot Instalasi java 5">
+                            <p class="image-caption">Gambar 2.5: Tampilan instalasi berhasil.</p>
+                        </div>
+                    </ol>
+                </div>
+            </section>
+            
+            <section id="langkah3" class="doc-section">
+                <h2>4. Langkah 3: Instalasi Maltego</h2>
+                <p>Jika Anda sudah menginstall java sebelumnya maka tampilan secara otomatis berganti menjadi instalasi maltego.</p>
+                <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101848.png" alt="Screenshot Instalasi Maltego 1">
+                            <p class="image-caption">Gambar 3.1: Tampilan pembuka saat instalasi Maltego.</p>
+                </div>
+                <div class="step-block">
+                    <ol>
+                        <li>Klik "<strong>Next</strong>"</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101902.png" alt="Screenshot Instalasi Maltego 2">
+                            <p class="image-caption">Gambar 3.2: Mengatur user.</p>
+                        </div>
+                        <li>Pilih sesuai keinginan, untuk semua user atau hanya user saat ini. Klik "<strong>Next</strong>"</li>
+                        <li>Tentukan lokasi aplikasi akan disimpan. Klik "<strong>Next</strong>"</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101918.png" alt="Screenshot Instalasi Maltego 3">
+                            <p class="image-caption">Gambar 3.3: Memilih lokasi instalasi.</p>
+                        </div>
+                        <li>Klik "<strong>Install</strong>"</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101929.png" alt="Screenshot Instalasi Maltego 4">
+                            <p class="image-caption">Gambar 3.4: Memilih folder start menu.</p>
+                        </div>
+                        <li>Menunggu proses instalasi selesai.</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 101942.png" alt="Screenshot Instalasi Maltego 5">
+                            <p class="image-caption">Gambar 3.5: Proses instalasi.</p>
+                        </div>
+                        <li>Selamat Anda sudah berhasil menginstal maltego, jika tampilan sudah seperti ini. Klik "<strong>Finish</strong>"</li>
+                        <div class="image-container">
+                            <img src="Foto/Screenshot 2025-10-06 102012.png" alt="Screenshot Instalasi Maltego 6">
+                            <p class="image-caption">Gambar 3.6: Berhasil menginstal maltego.</p>
+                        </div>
+                    </ol>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<footer class="doc-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="Foto/Logo-Universitas-Atma-Jaya-Yogyakarta-Dianisa.com_.png" alt="Logo UAJY" />
+                <p>Dokumentasi Tutorial. Diperbarui: 11 Oktober 2025.</p>
+            </div>
+        </div>
+</footer>
+
+
+</body>
+</html>
