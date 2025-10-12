@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Konektivitas ICMP (Ping) Antara Kali dan Windows</title>
+    <link rel="stylesheet" href="docstyle.css"> 
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="index.html">Keamanan Jaringan</a></h1>
+            <nav class="nav-kanan">
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="index.html">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container doc-content-wrapper">
+        
+        <aside class="doc-sidebar">
+            <nav class="toc">
+                <h2>Daftar Isi</h2>
+                <ul>
+                    <li><a href="#pendahuluan">1. Pendahuluan</a></li>
+                    <li><a href="#langkahA">2. Identifikasi Alamat IP</a></li>
+                    <li><a href="#langkahB">3. Uji Konektivitas Bidireksional (Ping)</a></li>
+                    <li><a href="#langkahC">4. Analisis ICMP dengan Wireshark (Windows)</a></li>
+                    <li><a href="#langkahD">5. Alternatif Penangkapan Paket di Kali</a></li>
+                    <li><a href="#verifikasi">6. Verifikasi dan Hasil</a></li>
+                    <li><a href="#troubleshooting">7. Pemecahan Masalah (Troubleshooting)</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="doc-main-content">
+
+            <section id="pendahuluan" class="doc-section">
+                <h2>1. Pendahuluan</h2>
+                <p>Dokumentasi ini memandu Anda dalam memverifikasi konektivitas jaringan (menggunakan protokol ICMP atau 'ping') antara sistem operasi **Kali Linux** dan **Windows**, yang sangat penting dalam lingkungan virtualisasi (seperti VirtualBox atau VMWare) dengan konfigurasi jaringan Host-Only. Verifikasi ini memastikan kedua mesin dapat berkomunikasi sebelum melakukan pengujian atau investigasi lebih lanjut.</p>
+            </section>
+
+            <section id="langkahA" class="doc-section">
+                <h2>2. Identifikasi Alamat IP</h2>
+                <p>Langkah pertama adalah mengetahui alamat IP dari kedua mesin.</p>
+                
+                <h3>Kali Linux:</h3>
+                <div class="code-block"><code>ip addr show
+# atau:
+hostname -I</code></div>
+                <p>Catat alamat IP yang sesuai dengan antarmuka Host-Only (misalnya, <code>192.168.56.101</code>).</p>
+
+                <h3>Windows (PowerShell/CMD):</h3>
+                <div class="code-block"><code>ipconfig</code></div>
+                <p>Catat alamat IP Host-Only Anda (biasanya merupakan alamat IP <em>gateway</em> virtual, misalnya, <code>192.168.56.1</code>).</p>
+            </section>
+
+            <section id="langkahB" class="doc-section">
+                <h2>3. Uji Konektivitas Bidireksional (Ping)</h2>
+                <p>Uji konektivitas dua arah untuk memastikan tidak ada pemblokiran firewall atau masalah konfigurasi jaringan.</p>
+
+                <h3>Windows → Kali:</h3>
+                <p>Jalankan perintah berikut di Command Prompt atau PowerShell Windows:</p>
+                <div class="code-block"><code>ping 192.168.56.101 -n 4</code></div>
+
+                <h3>Kali → Windows:</h3>
+                <p>Jalankan perintah berikut di Terminal Kali Linux:</p>
+                <div class="code-block"><code>ping -c 4 192.168.56.1</code></div>
+            </section>
+
+            <section id="langkahC" class="doc-section">
+                <h2>4. Analisis ICMP dengan Wireshark (Windows)</h2>
+                <p>Kita akan menangkap paket ICMP yang bergerak saat proses ping, menggunakan Wireshark di Windows untuk menganalisis detail protokol.</p>
+                <div class="step-block">
+                    <ol>
+                        <li>Buka **Wireshark** di Windows.</li>
+                        <li>Pilih antarmuka **Host-Only** (atau nama antarmuka yang terhubung ke jaringan virtual).</li>
+                        <li>Tekan tombol **Start** untuk mulai menangkap.</li>
+                        <li>Dari Terminal **Kali Linux**, jalankan ping ke Windows:
+                            <div class="code-block"><code>ping -c 5 192.168.56.1</code></div>
+                        </li>
+                        <li>Setelah ping selesai, tekan tombol **Stop** di Wireshark.</li>
+                        <li>Terapkan filter tampilan berikut untuk hanya melihat lalu lintas ICMP:
+                            <div class="code-block"><code>icmp</code></div>
+                            <p>Atau filter yang lebih spesifik:</p>
+                            <div class="code-block"><code>ip.addr == 192.168.56.101 && ip.addr == 192.168.56.1</code></div>
+                        </li>
+                        <li><p>Analisis salah satu *frame*:</p>
+                            <ul>
+                                <li><strong>Ethernet</strong>: Perhatikan MAC Address sumber (src) dan tujuan (dst).</li>
+                                <li><strong>IP</strong>: Perhatikan Alamat IP sumber (src) dan tujuan (dst).</li>
+                                <li><strong>ICMP</strong>: Perhatikan Tipe (Type 8 untuk echo-request, Type 0 untuk reply) dan Kode (Code 0).</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+            
+            <section id="langkahD" class="doc-section">
+                <h2>5. Alternatif Penangkapan Paket di Kali</h2>
+                <p>Sebagai alternatif, Anda dapat menggunakan <code>tcpdump</code> di Kali Linux untuk menangkap paket yang sama.</p>
+                <div class="code-block"><code>sudo tcpdump -i eth0 icmp -w icmp_cap.pcap</code></div>
+                <p>**(Catatan: Ganti <code>eth0</code> dengan nama antarmuka Host-Only Anda, jika berbeda.)**</p>
+                <div class="step-block">
+                    <ol>
+                        <li>Saat <code>tcpdump</code> berjalan, lakukan ping dari **Windows** ke Kali.</li>
+                        <li>Hentikan <code>tcpdump</code> dengan menekan <code>Ctrl+C</code>.</li>
+                        <li>Tampilkan hasilnya:
+                            <div class="code-block"><code>sudo tcpdump -r icmp_cap.pcap</code></div>
+                        </li>
+                    </ol>
+                </div>
+                <p>*(Opsional: Anda dapat memindahkan file <code>icmp_cap.pcap</code> ke Windows dan membukanya di Wireshark untuk analisis visual.)*</p>
+            </section>
+
+            <section id="verifikasi" class="doc-section">
+                <h2>6. Verifikasi dan Hasil</h2>
+                <p>Pengujian Anda berhasil jika mencapai hasil berikut:</p>
+                <ul>
+                    <li>Ping bidireksional berhasil (tidak ada *timeout*).</li>
+                    <li>Terlihat paket Echo Request (Tipe 8) dan Echo Reply (Tipe 0) di Wireshark.</li>
+                    <li>Anda dapat menjelaskan hubungan antara MAC Address, IP Address, dan detail tipe/kode ICMP dari paket yang ditangkap.</li>
+                </ul>
+                <p>Untuk pembersihan, hentikan semua proses penangkapan (`Wireshark`/`tcpdump`) dan simpan file <code>icmp_cap.pcap</code> untuk laporan jika diperlukan.</p>
+            </section>
+
+            <section id="troubleshooting" class="doc-section">
+                <h2>7. Pemecahan Masalah (Troubleshooting)</h2>
+                <p>Jika terjadi **Ping timeout** atau kegagalan konektivitas, periksa hal-hal berikut:</p>
+                <ul>
+                    <li>Pastikan mode adaptor jaringan virtual diatur ke **Host-Only**.</li>
+                    <li>Periksa **Windows Firewall** (coba nonaktifkan sementara untuk pengujian, lalu aktifkan kembali).</li>
+                    <li>Periksa status antarmuka di Kali Linux. Jika antarmuka belum aktif, jalankan perintah ini di Terminal Kali:
+                        <div class="code-block"><code>sudo ip link set eth0 up</code></div>
+                    </li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="doc-footer">
+            <div class="container">
+                <div class="footer-logo">
+                    <img src="Foto/Logo-Universitas-Atma-Jaya-Yogyakarta-Dianisa.com_.png" alt="Logo UAJY" />
+                    <p>Dokumentasi Tutorial. Diperbarui: 12 Oktober 2025.</p>
+                </div>
+            </div>
+    </footer>
+
+</body>
+</html>

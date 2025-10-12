@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Lalu Lintas Jaringan: HTTP Capture dan ICMP Flood</title>
+    <link rel="stylesheet" href="docstyle.css"> 
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="index.html">Keamanan Jaringan</a></h1>
+            <nav class="nav-kanan">
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="index.html">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container doc-content-wrapper">
+        
+        <aside class="doc-sidebar">
+            <nav class="toc">
+                <h2>Daftar Isi</h2>
+                <ul>
+                    <li><a href="#pendahuluan">1. Pendahuluan & Prasyarat</a></li>
+                    <li><a href="#langkahA">2. Menjalankan Server HTTP di Kali</a></li>
+                    <li><a href="#langkahB">3. Mengakses & Menangkap HTTP (Windows)</a></li>
+                    <li><a href="#langkahC">4. Simulasi ICMP Flood</a></li>
+                    <li><a href="#verifikasi">5. Verifikasi dan Analisis Hasil</a></li>
+                    <li><a href="#pembersihan">6. Pembersihan & Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="doc-main-content">
+
+            <section id="pendahuluan" class="doc-section">
+                <h2>1. Pendahuluan & Prasyarat</h2>
+                <p>Dokumentasi ini akan memandu Anda dalam melakukan penangkapan paket menggunakan Wireshark untuk menganalisis pola lalu lintas jaringan normal (HTTP) dan membandingkannya dengan pola serangan Denial of Service (DoS) sederhana, yaitu ICMP Flood.</p>
+                <p><strong>LAB ONLY: Simulasi serangan hanya boleh dilakukan pada jaringan yang terisolasi (Host-Only/isolated network).</strong></p>
+                
+                <h3>Topologi & Persiapan</h3>
+                <ul>
+                    <li><strong>Server HTTP (Kali):</strong> <code>192.168.56.101</code> (Contoh IP)</li>
+                    <li><strong>Klien/Sniffer (Windows):</strong> <code>192.168.56.1</code> (Contoh IP)</li>
+                    <li><strong>Verifikasi Python 3 di Kali:</strong>
+                        <div class="code-block"><code>python3 --version</code></div>
+                    </li>
+                    <li>Pastikan Windows sudah siap untuk menjalankan Wireshark.</li>
+                </ul>
+            </section>
+
+            <section id="langkahA" class="doc-section">
+                <h2>2. Menjalankan Server HTTP di Kali</h2>
+                <p>Kita akan menggunakan modul <code>http.server</code> Python untuk membuat server web sederhana di Kali pada port 8080.</p>
+                <div class="step-block">
+                    <ol>
+                        <li>Buat direktori kerja dan buat file <code>index.html</code>:
+                            <div class="code-block"><code>mkdir -p ~/web_test && cd ~/web_test
+echo "Hello from Kali" > index.html</code></div>
+                        </li>
+                        <li>Jalankan server HTTP. **Biarkan terminal ini tetap terbuka.**
+                            <div class="code-block"><code>python3 -m http.server 8080</code></div>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="langkahB" class="doc-section">
+                <h2>3. Mengakses & Menangkap HTTP (Windows)</h2>
+                <p>Gunakan Wireshark di Windows untuk menangkap sesi HTTP normal.</p>
+                <div class="step-block">
+                    <ol>
+                        <li>Di **Windows (Wireshark)**: Pilih antarmuka **Host-Only** → Tekan **Start** untuk mulai menangkap.</li>
+                        <li>Di **Windows (Browser/PowerShell)**: Akses server yang baru saja dibuat:
+                            <div class="code-block"><code>powershell
+curl http://192.168.56.101:8080
+# atau buka di browser favorit Anda: http://192.168.56.101:8080</code></div>
+                        </li>
+                        <li>Setelah akses, terapkan filter tampilan di Wireshark:
+                            <div class="code-block"><code>http
+# atau
+tcp.port == 8080</code></div>
+                        </li>
+                    </ol>
+                </div>
+                <p><strong>Cek:</strong> Anda seharusnya melihat paket yang menunjukkan proses TCP Three-way Handshake (SYN, SYN-ACK, ACK), diikuti oleh permintaan **GET / HTTP/1.1**, dan respons **200 OK**.</p>
+            </section>
+
+            <section id="langkahC" class="doc-section">
+                <h2>4. Simulasi ICMP Flood</h2>
+                <p>Gunakan terminal Kali baru untuk mensimulasikan serangan ICMP Flood (ping berkecepatan tinggi) ke IP Windows.</p>
+
+                <h3>Instalasi Tools (Jika Diperlukan):</h3>
+                <div class="code-block"><code>sudo apt update && sudo apt install -y hping3</code></div>
+                
+                <h3>Simulasi Flood (Pilihan 1: hping3 - Cepat & Intens)</h3>
+                <div class="code-block"><code>sudo hping3 --flood -1 192.168.56.1  # Gunakan Ctrl+C untuk menghentikan</code></div>
+
+                <h3>Simulasi Flood (Pilihan 2: ping - Lebih Ringan)</h3>
+                <div class="code-block"><code>ping -f -i 0.002 192.168.56.1</code></div>
+                
+                <div class="step-block">
+                    <ol>
+                        <li>Di Wireshark Windows, biarkan penangkapan tetap berjalan saat Anda menjalankan serangan *flood* selama beberapa detik.</li>
+                        <li>Hentikan penangkapan di Wireshark.</li>
+                        <li>Terapkan filter: 
+                            <div class="code-block"><code>icmp</code></div>
+                        </li>
+                        <li>Lakukan analisis grafis melalui **Statistics → I/O Graph** dan bandingkan *packets per second* (pps) antara periode sebelum dan selama *flood*.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="verifikasi" class="doc-section">
+                <h2>5. Verifikasi dan Analisis Hasil</h2>
+                <p>Berdasarkan penangkapan paket, Anda harus mengamati pola lalu lintas yang berbeda:</p>
+                <ul>
+                    <li><strong>Pola HTTP Normal:</strong> Ditandai dengan urutan paket yang jelas (burst pendek) yang melibatkan **TCP Handshake** diikuti oleh pasangan **Request/Response**.</li>
+                    <li><strong>Pola ICMP Flood:</strong> Ditandai dengan aliran paket ICMP yang **terus-menerus** dan memiliki nilai **pps yang sangat tinggi**, tanpa adanya mekanisme *handshake* yang terstruktur.</li>
+                </ul>
+            </section>
+            
+            <section id="pembersihan" class="doc-section">
+                <h2>6. Pembersihan & Troubleshooting</h2>
+                
+                <h3>Pembersihan</h3>
+                <ul>
+                    <li>Tekan <code>Ctrl+C</code> untuk menghentikan proses **hping3** atau **ping -f** di Kali.</li>
+                    <li>Tekan <code>Ctrl+C</code> untuk menghentikan server HTTP Python.</li>
+                    <li>Simpan hasil penangkapan Wireshark (<code>.pcap</code>) untuk dokumentasi.</li>
+                </ul>
+
+                <h3>Pemecahan Masalah (Troubleshooting)</h3>
+                <ul>
+                    <li><strong>Perintah Ditolak:</strong> Perintah <code>hping3</code> atau <code>ping -f</code> memerlukan hak akses root. Pastikan Anda menggunakannya dengan <code>sudo</code>.</li>
+                    <li><strong>Port 8080 Tidak Terlihat:</strong> Pastikan Anda menggunakan filter yang benar di Wireshark (<code>http</code> atau <code>tcp.port == 8080</code>) dan memastikan alamat IP serta port diakses dengan benar di Windows (<code>http://192.168.56.101:8080</code>).</li>
+                </ul>
+            </section>
+            
+        </main>
+    </div>
+
+    <footer class="doc-footer">
+            <div class="container">
+                <div class="footer-logo">
+                    <img src="Foto/Logo-Universitas-Atma-Jaya-Yogyakarta-Dianisa.com_.png" alt="Logo UAJY" />
+                    <p>Dokumentasi Tutorial. Diperbarui: 12 Oktober 2025.</p>
+                </div>
+            </div>
+    </footer>
+
+
+</body>
+</html>
